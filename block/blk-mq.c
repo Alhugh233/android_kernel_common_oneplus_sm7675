@@ -2354,7 +2354,14 @@ bool test_task_ux(struct task_struct *task)
 
 	return ux;
 }
-EXPORT_SYMBOL_GPL(test_task_ux);
+/*
+ * Do not export this symbol: the vendor module oplus_bsp_sched_assist.ko
+ * (built from vendor/oplus/kernel/cpu/sched/sched_assist/sa_common.c)
+ * already exports test_task_ux() and is loaded from the first-stage
+ * vendor_boot ramdisk.  A second export from the kernel makes that module
+ * fail to load and breaks the CRC of the modules importing it.  The
+ * built-in f2fs caller does not need an export.
+ */
 
 static inline bool need_high_pri_worker(struct request_queue *q)
 {
